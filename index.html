@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КАКАЯ СЕГОДНЯ НЕДЕЛЯ???</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        #week_num {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 4em;
+
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const SUITT_OFFSET = 17;
+        //https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
+        function getWeekNumber(d) {
+            // Copy date so don't modify original
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            // Set to nearest Thursday: current date + 4 - current day number
+            // Make Sunday's day number 7
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            // Get first day of year
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            // Calculate full weeks to nearest Thursday
+            var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+            // Return array of year and week number
+            return [d.getUTCFullYear(), weekNo + SUITT_OFFSET];
+        }
+        
+        window.onload = () => {
+            text_str = `Сейчас ${getWeekNumber(new Date())[1]} неделя.`
+            week_num.innerText = text_str
+            document.title = text_str
+        }
+    </script>
+
+    <h1 id="week_num">БЕЗ ПОНЯТИЯ</h1>
+</body>
+</html>
