@@ -48,6 +48,7 @@
             })
             .then(data => {
                 this_week_schedule = data[getWeekNumber(new Date())[1]]
+                document.title = `ЩАС ${getWeekNumber(new Date())[1]} НЕДЕЛЯ`
                 for(i = 0; i < 3; i++){
                     day_of_week_e = document.createElement("li")
                     day_of_week_list_e = document.createElement("ul")
@@ -76,4 +77,5 @@
     <ul id="current_week_schedule">
     </ul>
 </body>
+
 </html>
