@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание</title>
+</head>
+<body>
+    <script>
+        times = [
+            "8:00 - 9:20",
+            "9:35 - 10:55",
+            "11:10 - 12:30",
+            "12:45 - 14:05",
+            "14:20 - 15:40"
+        ]
+        weekdays = [
+            "Понедельник",
+            "Вторник",
+            "Среда"
+        ]
+        links = {
+            "Цифровая экономика": "https://us05web.zoom.us/j/76584804275?pwd=Q1JpcmZ5L2w3eDBvdVRaQUl1Z1BEdz09",
+            "Теория вероятностей и математическая статистика": "https://us05web.zoom.us/j/6965824878?pwd=bXpEVXltMW5yNnVWNkkwQklMV1Z4UT09",
+            "Треннинг: Стрессостойкость": "",
+            "Веб технологии и Веб дизайн": "https://us04web.zoom.us/j/86832967273?pwd=aXFiZnozOUhjeUlMbmhBWXdiTGU1QT09",
+            "Компьютерная схемотехника и архитектура компьютеров": "https://us04web.zoom.us/j/4474657787?pwd=OAjL1bol38zKUM8RLWJZ5M9FfZ1qZc.1"
+        }
+        const SUITT_OFFSET = 17;
+        //https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
+        function getWeekNumber(d) {
+            // Copy date so don't modify original
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            // Set to nearest Thursday: current date + 4 - current day number
+            // Make Sunday's day number 7
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            // Get first day of year
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            // Calculate full weeks to nearest Thursday
+            var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+            // Return array of year and week number
+            return [d.getUTCFullYear(), weekNo + SUITT_OFFSET];
+        }
+        function get_schedule(){
+            fetch("./schedule.json")
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                this_week_schedule = data[getWeekNumber(new Date())[1]]
+                for(i = 0; i < 3; i++){
+                    day_of_week_e = document.createElement("li")
+                    day_of_week_list_e = document.createElement("ul")
+                    for(j = 0; j < 5; j++){
+                        class_e = document.createElement("li")
+                        class_link_e = document.createElement("a")
+                        if (this_week_schedule[i][j]){
+                            class_link_e.href = links[this_week_schedule[i][j]]
+                        }
+                        class_link_e.innerText = `${times[j]} ${this_week_schedule[i][j]}`
+                        class_e.append(class_link_e)
+                        day_of_week_list_e.append(class_e)
+                    }
+                    day_of_week_e.innerText = weekdays[i]
+                    day_of_week_e.append(day_of_week_list_e)
+                    current_week_schedule.append(day_of_week_e)
+                }
+            })
+        }
+        
+
+        window.onload = () => {
+            get_schedule()
+        }
+    </script>
+    <ul id="current_week_schedule">
+    </ul>
+</body>
+</html>
